@@ -1,0 +1,27 @@
+{
+  "name": "urlshortner-api",
+  "version": "1.0.0",
+  "description": "A robust URL shortening service with authentication, rate limiting, and analytics features.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reek004/urlShortner-API.git"
+  },
+  "author": "rex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reek004/urlShortner-API/issues"
+  },
+  "homepage": "https://github.com/reek004/urlShortner-API#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.8.4",
+    "nodemon": "^3.1.7"
+  }
+}
