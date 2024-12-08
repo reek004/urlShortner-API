@@ -202,6 +202,27 @@ npm test -- --verbose
 
 **Base URL:** `http://localhost:3000`
 
+### Authentication Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/auth/register` | POST | Register a new user |
+| `/auth/login` | POST | User login |
+| `/auth/refresh-api-key` | POST | Refresh API key |
+
+### URL Management Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/urls` | GET | List all URLs |
+| `/urls` | POST | Create a short URL |
+| `/urls/bulk` | POST | Create multiple URLs |
+| `/:code` | GET | URL Redirection |
+| `/urls/:code/stats` | GET | Get URL statistics |
+| `/urls/:code/qr` | GET | Generate QR Code |
+| `/urls/:code` | DELETE | Delete a URL |
+
+
 ## 1. Authentication Endpoints
 
 ### 1.1 Register User
