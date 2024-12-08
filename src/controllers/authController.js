@@ -69,8 +69,9 @@ class AuthController {
     try {
       const { email, password } = req.body;
 
-      // Find user
-      const user = await User.findOne({ email });
+      // Find user and validate credentials
+      // Add .select('+password +apiKey') to include both password and apiKey fields
+      const user = await User.findOne({ email }).select('+password +apiKey');
       if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
