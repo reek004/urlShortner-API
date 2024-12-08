@@ -1,12 +1,32 @@
+/**
+ * URL Controller
+ * Handles all HTTP requests for URL operations
+ * Features:
+ * - URL shortening with custom aliases
+ * - QR code generation
+ * - URL redirection
+ * - Analytics tracking
+ * - Bulk URL processing
+ * - Access control enforcement
+ */
 const urlService = require('../services/urlService');
 const path = require('path');
 const config = require('../config/config');
 
 class UrlController {
+  /**
+   * Create Short URL
+   * POST /urls
+   * @param {Object} req.body.longUrl - Original URL to shorten
+   * @param {Object} req.body.customAlias - Optional custom alias
+   * @param {Object} req.body.expiresIn - Optional expiration time in seconds
+   * @returns {Object} Shortened URL details with QR code
+   **/
   async shortenUrl(req, res) {
     try {
       const { longUrl, customAlias, expiresIn } = req.body;
       
+      // Calculate expiration date if provided
       let expiresAt = null;
       if (expiresIn) {
         expiresAt = new Date(Date.now() + parseInt(expiresIn) * 1000);
@@ -19,7 +39,7 @@ class UrlController {
         req.user.userId
       );
 
-      // return the qr code as a base64 string
+      // Return URL details with QR code
       res.json({
         shortUrl: url.shortUrl,
         qrCode: url.qrCode, 
@@ -31,12 +51,18 @@ class UrlController {
     }
   }
 
+  /**
+   * Redirect to Original URL
+   * GET /:code
+   * Handles URL redirection and tracks analytics
+   * @param {string} req.params.code - Short URL code
+   */
   async redirect(req, res) {
     try {
       const { code } = req.params;
       const url = await urlService.getUrl(code);
       
-      // Track click
+      // Track click analytics
       await urlService.trackClick(code, {
         ip: req.ip,
         userAgent: req.headers['user-agent'],
@@ -49,6 +75,13 @@ class UrlController {
     }
   }
 
+  /**
+   * Get URL Statistics
+   * GET /urls/:code/stats
+   * Retrieves detailed analytics for a specific URL
+   * @param {string} req.params.code - Short URL code
+   * @returns {Object} URL statistics and analytics
+   */
   async getUrlStats(req, res) {
     try {
       const { code } = req.params;
@@ -66,10 +99,18 @@ class UrlController {
     }
   }
 
+  /**
+   * Create Multiple Short URLs
+   * POST /urls/bulk
+   * Processes multiple URLs in a single request
+   * @param {Array} req.body.urls - Array of URLs to process
+   * @returns {Array} Results for each URL
+   */
   async createBulkUrls(req, res) {
     try {
       const { urls } = req.body;
       
+      // Validate input array
       if (!Array.isArray(urls) || urls.length === 0) {
         return res.status(400).json({ error: 'Invalid URLs array' });
       }
@@ -81,6 +122,13 @@ class UrlController {
     }
   }
 
+  /**
+   * Get QR Code
+   * GET /urls/:code/qr
+   * Retrieves QR code for a specific URL
+   * @param {string} req.params.code - Short URL code
+   * @returns {Object} QR code and short URL
+   */
   async getQrCode(req, res) {
     try {
       const { code } = req.params;
@@ -102,6 +150,12 @@ class UrlController {
     }
   }
 
+  /**
+   * List All URLs
+   * GET /urls
+   * Retrieves all URLs for the authenticated user
+   * @returns {Array} List of user's URLs
+   */
   async getAllUrls(req, res) {
     try {
       const urls = await urlService.getAllUrls(req.user.userId);
@@ -118,6 +172,13 @@ class UrlController {
     }
   }
 
+  /**
+   * Delete URL
+   * DELETE /urls/:code
+   * Removes a URL if owned by the requesting user
+   * @param {string} req.params.code - Short URL code
+   * @returns {Object} Deletion status
+   */
   async deleteUrl(req, res) {
     try {
       const { code } = req.params;
@@ -135,8 +196,7 @@ class UrlController {
         message: 'URL deleted successfully' 
       });
     } catch (error) {
-      
-      
+      // Handle specific error cases
       if (error.message === 'No such URL') {
         return res.status(404).json({
           status: 'CLIENT_ERROR',
@@ -149,6 +209,7 @@ class UrlController {
         });
       }
       
+      // Generic error handler
       return res.status(500).json({
         status: 'SERVER_ERROR',
         message: 'Internal server error'
