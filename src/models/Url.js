@@ -1,3 +1,14 @@
+/**
+ * URL Schema Definition
+ * Defines the structure for storing shortened URLs with analytics
+ * Features:
+ * - URL tracking with analytics
+ * - QR code generation
+ * - Expiration support
+ * - Click tracking
+ * - User association
+ */
+
 const mongoose = require('mongoose');
 
 const urlSchema = new mongoose.Schema({

@@ -1,4 +1,18 @@
+
+/**
+ * URL Validator Middleware
+ * Validates and sanitizes URLs before processing
+ * Features:
+ * - Protocol requirement checking
+ * - URL format validation
+ * - Bulk URL validation
+ * - URL encoding/sanitization
+ * - Custom alias format validation
+ */
+
 const { isURL } = require('validator');
+
+
 
 const urlValidator = (req, res, next) => {
   // Handle bulk URL creation

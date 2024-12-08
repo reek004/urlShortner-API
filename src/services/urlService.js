@@ -1,3 +1,14 @@
+/**
+ * URL Service
+ * Handles all business logic for URL operations including:
+ * - URL shortening with custom alias support
+ * - QR code generation
+ * - Analytics tracking
+ * - Cache management
+ * - Bulk operations
+ * - Access control
+ */
+
 const { nanoid } = require('nanoid');
 const QRCode = require('qrcode');
 const Url = require('../models/Url');
