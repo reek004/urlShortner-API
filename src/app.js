@@ -18,15 +18,24 @@ app.use('/auth', authRoutes);
 app.use('/', urlRoutes);
 
 
+// MongoDB connection with current recommended settings
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    await mongoose.connect(process.env.MONGODB_URI, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 10000,
+      heartbeatFrequencyMS: 10000,
+      retryWrites: true,
+    });
+    console.log("Connected to MongoDB");
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error("MongoDB connection error:", error);
     process.exit(1);
   }
 };
+
 
 // Only connect if we're not in test mode
 if (process.env.NODE_ENV !== 'test') {
